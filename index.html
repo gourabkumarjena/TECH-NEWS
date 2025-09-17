@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechPulse - Tech News Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        :root {
+            --primary: #0a2463;
+            --secondary: #1e3a5f;
+            --accent: #00a8ff;
+            --light: #f5f5f5;
+            --dark: #222;
+            --success: #4caf50;
+            --warning: #ffc107;
+            --info: #2196f3;
+            --cybersecurity: #9c27b0;
+            --gadget: #009688;
+            --programming: #3f51b5;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --blue-gradient: linear-gradient(135deg, #0a2463 0%, #1e3a5f 50%, #005792 100%);
+        }
+        body {
+            background: var(--blue-gradient);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wMykiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=');
+            z-index: -1;
+            opacity: 0.5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: 0 0 15px var(--accent);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+        }
+        .logo i {
+            font-size: 2.8rem;
+            color: var(--accent);
+            filter: drop-shadow(0 0 10px rgba(0, 168, 255, 0.7));
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), var(--info), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
+            letter-spacing: 1px;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .refresh-btn {
+            background: linear-gradient(45deg, var(--accent), #0078d4);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .refresh-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+            z-index: -1;
+        }
+        .refresh-btn:hover::before {
+            transform: translateX(0);
+        }
+        .refresh-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 168, 255, 0.5);
+        }
+        .refresh-btn:active {
+            transform: translateY(1px);
+        }
+        .refresh-btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .news-counter {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .news-counter i {
+            color: var(--info);
+            filter: drop-shadow(0 0 5px rgba(33, 150, 243, 0.5));
+        }
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .category-tabs::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+        .tab {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            color: var(--light);
+            border: 1px solid var(--glass-border);
+            padding: 12px 22px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+        .tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .tab.active {
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
+        }
+        .tab.active::before {
+            width: 100%;
+        }
+        .tab.cybersecurity.active::before {
+            background: var(--cybersecurity);
+        }
+        .tab.gadget.active::before {
+            background: var(--gadget);
+        }
+        .tab.programming.active::before {
+            background: var(--programming);
+        }
+        .tab.cybersecurity.active {
+            box-shadow: 0 5px 15px rgba(156, 39, 176, 0.4);
+        }
+        .tab.gadget.active {
+            box-shadow: 0 5px 15px rgba(0, 150, 136, 0.4);
+        }
+        .tab.programming.active {
+            box-shadow: 0 5px 15px rgba(63, 81, 181, 0.4);
+        }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        .news-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+        .news-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+        .news-card:hover::before {
+            opacity: 1;
+        }
+        .news-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .card-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            z-index: 1;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+        .news-card:hover .card-image img {
+            transform: scale(1.08);
+        }
+        .card-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+        }
+        .card-category {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            align-self: flex-start;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: var(--accent);
+            box-shadow: 0 4px 10px rgba(0, 168, 255, 0.3);
+        }
+        .card-category.cybersecurity {
+            background: var(--cybersecurity);
+            box-shadow: 0 4px 10px rgba(156, 39, 176, 0.3);
+        }
+        .card-category.gadget {
+            background: var(--gadget);
+            box-shadow: 0 4px 10px rgba(0, 150, 136, 0.3);
+        }
+        .card-category.programming {
+            background: var(--programming);
+            box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .card-description {
+            color: #ddd;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .card-source {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .no-news {
+            text-align: center;
+            padding: 80px 20px;
+            color: #aaa;
+        }
+        .no-news i {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            color: var(--accent);
+            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .no-news h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: white;
+            font-weight: 600;
+        }
+        .no-news p {
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            padding: 80px 0;
+        }
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);
+        }
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 25px;
+                text-align: center;
+            }
+            .logo h1 {
+                font-size: 2rem;
+            }
+            .controls {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            .category-tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-microchip"></i>
+                <h1>TechPulse</h1>
+            </div>
+            <div class="controls">
+                <div class="news-counter" id="newsCounter">
+                    <i class="fas fa-newspaper"></i>
+                    <span id="articleCount">0</span> articles
+                </div>
+                <button class="refresh-btn" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh News
+                </button>
+            </div>
+        </header>
+        <div class="category-tabs" id="categoryTabs">
+            <div class="tab active" data-category="all">All News</div>
+            <div class="tab" data-category="technology">Technology</div>
+            <div class="tab" data-category="business">Business</div>
+            <div class="tab" data-category="science">Science</div>
+            <div class="tab" data-category="health">Health</div>
+            <div class="tab" data-category="entertainment">Entertainment</div>
+            <div class="tab" data-category="sports">Sports</div>
+            <div class="tab cybersecurity" data-category="cybersecurity">Cybersecurity</div>
+            <div class="tab gadget" data-category="gadget">Gadgets</div>
+            <div class="tab programming" data-category="programming">Programming</div>
+        </div>
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+        </div>
+        <div class="news-grid" id="newsGrid"></div>
+        <div class="no-news" id="noNews" style="display: none;">
+            <i class="fas fa-newspaper"></i>
+            <h3>No News Found</h3>
+            <p>We couldn't find any news articles for this category. Try selecting a different category or refreshing the news.</p>
+        </div>
+    </div>
+    <footer>
+        <p>© 2023 TechPulse | Powered by multiple news APIs</p>
+    </footer>
+    <script>
+        // API Configuration
+        const API_KEYS = {
+            newsapi: '2e2a2541d63547f3bcc7c60eb9efdee4',
+            gnews: '56b08d1b1dcf82c8d2aa1e3af1eef7eb',
+            currentsapi: 'GP1-NFAc7nWFLVK56Yle7MzrxFxBr3pAN-nLeu7mbJk68Y1r',
+            newsdata: 'pub_8093a5d7103f4f138843b136ea81d4d2',
+            mediastack: '40eed86b66e29bb565ae337729d64e81',
+            guardian: 'test'
+        };
+        // DOM Elements
+        const refreshBtn = document.getElementById('refreshBtn');
+        const categoryTabs = document.querySelectorAll('.tab');
+        const newsGrid = document.getElementById('newsGrid');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const noNews = document.getElementById('noNews');
+        const articleCount = document.getElementById('articleCount');
+        // State
+        let currentCategory = 'all';
+        let isLoading = false;
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchNews();
+            
+            // Event Listeners
+            refreshBtn.addEventListener('click', fetchNews);
+            
+            categoryTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Update active tab
+                    categoryTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Update current category and fetch news
+                    currentCategory = tab.dataset.category;
+                    fetchNews();
+                });
+            });
+        });
+        // Fetch news from all APIs
+        async function fetchNews() {
+            if (isLoading) return;
+            
+            isLoading = true;
+            refreshBtn.classList.add('loading');
+            newsGrid.style.display = 'none';
+            noNews.style.display = 'none';
+            loadingSpinner.style.display = 'flex';
+            
+            try {
+                const promises = [
+                    fetchFromNewsAPI(),
+                    fetchFromGNews(),
+                    fetchFromCurrentsAPI(),
+                    fetchFromNewsDataIO(),
+                    fetchFromMediaStack(),
+                    fetchFromGuardian(),
+                    fetchFromTechCrunch(),
+                    fetchFromWired()
+                ];
+                
+                const results = await Promise.allSettled(promises);
+                const allArticles = [];
+                
+                results.forEach(result => {
+                    if (result.status === 'fulfilled') {
+                        allArticles.push(...result.value);
+                    }
+                });
+                
+                // Filter articles by category if not "all"
+                const filteredArticles = currentCategory === 'all' 
+                    ? allArticles 
+                    : allArticles.filter(article => 
+                        article.category.toLowerCase() === currentCategory.toLowerCase()
+                    );
+                
+                // Remove duplicates based on title
+                const uniqueArticles = removeDuplicates(filteredArticles, 'title');
+                
+                // Display articles
+                displayArticles(uniqueArticles);
+                
+                // Update article count
+                articleCount.textContent = uniqueArticles.length;
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                displayError();
+            } finally {
+                isLoading = false;
+                refreshBtn.classList.remove('loading');
+                loadingSpinner.style.display = 'none';
+            }
+        }
+        // Fetch from NewsAPI
+        async function fetchFromNewsAPI() {
+            const category = currentCategory === 'all' ? '' : `&category=${mapCategory(currentCategory)}`;
+            const url = `https://newsapi.org/v2/top-headlines?country=us${category}&pageSize=100&apiKey=${API_KEYS.newsapi}`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.status !== 'ok') throw new Error(data.message);
+            
+            return data.articles.map(article => ({
+                title: article.title,
+                description: article.description,
+                url: article.url,
+                image: article.urlToImage,
+                source: article.source.name,
+                publishedAt: article.publishedAt,
+                category: mapCategoryBack(currentCategory === 'all' ? 'general' : currentCategory)
+            }));
+        }
+        // Fetch from GNews
+        async function fetchFromGNews() {
+            const category = currentCategory === 'all' ? '' : `&topic=${mapCategory(currentCategory)}`;
+            const url = `https://gnews.io/api/v4/top-headlines?lang=en&country=us${category}&max=100&apikey=${API_KEYS.gnews}`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.status !== 'ok') throw new Error(data.message);
+            
+            return data.articles.map(article => ({
+                title: article.title,
+                description: article.description,
+                url: article.url,
+                image: article.image,
+                source: article.source.name,
+                publishedAt: article.publishedAt,
+                category: mapCategoryBack(currentCategory === 'all' ? 'general' : currentCategory)
+            }));
+        }
+        // Fetch from CurrentsAPI
+        async function fetchFromCurrentsAPI() {
+            const category = currentCategory === 'all' ? '' : `&category=${mapCategory(currentCategory)}`;
+            const url = `https://api.currentsapi.services/v1/latest-news?language=en&country=US${category}&limit=100&apiKey=${API_KEYS.currentsapi}`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.status !== 'ok') throw new Error(data.message);
+            
+            return data.news.map(article => ({
+                title: article.title,
+                description: article.description,
+                url: article.url,
+                image: article.image,
+                source: article.source,
+                publishedAt: article.published,
+                category: mapCategoryBack(currentCategory === 'all' ? 'general' : currentCategory)
+            }));
+        }
+        // Fetch from NewsDataIO
+        async function fetchFromNewsDataIO() {
+            const category = currentCategory === 'all' ? '' : `&category=${mapCategory(currentCategory)}`;
+            const url = `https://newsdata.io/api/1/news?apikey=${API_KEYS.newsdata}&country=us&language=en${category}&size=100`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.status !== 'success') throw new Error(data.message);
+            
+            return data.results.map(article => ({
+                title: article.title,
+                description: article.description,
+                url: article.link,
+                image: article.image_url,
+                source: article.source_id,
+                publishedAt: article.pubDate,
+                category: mapCategoryBack(currentCategory === 'all' ? 'general' : currentCategory)
+            }));
+        }
+        // Fetch from MediaStack
+        async function fetchFromMediaStack() {
+            const category = currentCategory === 'all' ? '' : `&categories=${mapCategory(currentCategory)}`;
+            const url = `https://api.mediastack.com/v1/news?access_key=${API_KEYS.mediastack}&countries=us&languages=en${category}&limit=100`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.error) throw new Error(data.error.message);
+            
+            return data.data.map(article => ({
+                title: article.title,
+                description: article.description,
+                url: article.url,
+                image: article.image,
+                source: article.source,
+                publishedAt: article.published_at,
+                category: mapCategoryBack(currentCategory === 'all' ? 'general' : currentCategory)
+            }));
+        }
+        // Fetch from The Guardian
+        async function fetchFromGuardian() {
+            const category = currentCategory === 'all' ? '' : `&section=${mapCategory(currentCategory)}`;
+            const url = `https://content.guardianapis.com/search?api-key=${API_KEYS.guardian}&show-fields=thumbnail,headline,trailText${category}&page-size=50`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.response.status !== 'ok') throw new Error(data.message);
+            
+            return data.response.results.map(article => ({
+                title: article.webTitle,
+                description: article.fields.trailText,
+                url: article.webUrl,
+                image: article.fields.thumbnail,
+                source: 'The Guardian',
+                publishedAt: article.webPublicationDate,
+                category: mapCategoryBack(currentCategory === 'all' ? 'general' : currentCategory)
+            }));
+        }
+        // Fetch from TechCrunch
+        async function fetchFromTechCrunch() {
+            const category = currentCategory === 'all' ? '' : `&category=${mapCategory(currentCategory)}`;
+            const url = `https://techcrunch.com/wp-json/wp/v2/posts?per_page=50${category}`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (!Array.isArray(data)) throw new Error('Invalid response');
+            
+            return data.map(article => ({
+                title: article.title.rendered.replace(/<[^>]*>/g, ''),
+                description: article.excerpt.rendered.replace(/<[^>]*>/g, ''),
+                url: article.link,
+                image: article.jetpack_featured_media_url,
+                source: 'TechCrunch',
+                publishedAt: article.date,
+                category: mapCategoryBack(currentCategory === 'all' ? 'technology' : currentCategory)
+            }));
+        }
+        // Fetch from Wired
+        async function fetchFromWired() {
+            const category = currentCategory === 'all' ? '' : `&category=${mapCategory(currentCategory)}`;
+            const url = `https://www.wired.com/feed/rss?per_page=50${category}`;
+            
+            // Using a proxy to avoid CORS issues
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxyUrl);
+            const data = await response.json();
+            
+            if (!data.contents) throw new Error('Invalid response');
+            
+            // Parse RSS feed
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+            const items = xmlDoc.querySelectorAll("item");
+            
+            const articles = [];
+            items.forEach(item => {
+                const title = item.querySelector("title").textContent;
+                const description = item.querySelector("description").textContent;
+                const link = item.querySelector("link").textContent;
+                const pubDate = item.querySelector("pubDate").textContent;
+                
+                // Extract image from description
+                const imgMatch = description.match(/<img[^>]+src="([^">]+)"/);
+                const image = imgMatch ? imgMatch[1] : 'https://picsum.photos/seed/wired/600/400.jpg';
+                
+                articles.push({
+                    title: title,
+                    description: description.replace(/<[^>]*>/g, ''),
+                    url: link,
+                    image: image,
+                    source: 'Wired',
+                    publishedAt: pubDate,
+                    category: mapCategoryBack(currentCategory === 'all' ? 'technology' : currentCategory)
+                });
+            });
+            
+            return articles;
+        }
+        // Map our categories to API-specific categories
+        function mapCategory(category) {
+            const categoryMap = {
+                'all': '',
+                'technology': 'technology',
+                'business': 'business',
+                'science': 'science',
+                'health': 'health',
+                'entertainment': 'entertainment',
+                'sports': 'sports',
+                'cybersecurity': 'technology',
+                'gadget': 'technology',
+                'programming': 'technology'
+            };
+            
+            return categoryMap[category] || '';
+        }
+        // Map API categories back to our categories
+        function mapCategoryBack(category) {
+            if (category === 'all') return 'general';
+            return category;
+        }
+        // Display articles
+        function displayArticles(articles) {
+            if (articles.length === 0) {
+                newsGrid.style.display = 'none';
+                noNews.style.display = 'block';
+                articleCount.textContent = '0';
+                return;
+            }
+            
+            newsGrid.innerHTML = '';
+            newsGrid.style.display = 'grid';
+            noNews.style.display = 'none';
+            
+            // Limit to 100 articles for performance
+            const displayArticles = articles.slice(0, 100);
+            
+            displayArticles.forEach(article => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                
+                const formattedDate = new Date(article.publishedAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                // Add category-specific styling
+                let categoryClass = '';
+                if (article.category === 'cybersecurity') categoryClass = 'cybersecurity';
+                if (article.category === 'gadget') categoryClass = 'gadget';
+                if (article.category === 'programming') categoryClass = 'programming';
+                
+                card.innerHTML = `
+                    <div class="card-image">
+                        <img src="${article.image || 'https://picsum.photos/seed/tech/600/400.jpg'}" alt="${article.title}">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-category ${categoryClass}">${article.category}</div>
+                        <h3 class="card-title">${article.title}</h3>
+                        <p class="card-description">${article.description || 'No description available'}</p>
+                        <div class="card-meta">
+                            <div class="card-source">
+                                <i class="fas fa-rss"></i>
+                                ${article.source}
+                            </div>
+                            <div class="card-date">
+                                <i class="far fa-calendar-alt"></i>
+                                ${formattedDate}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    window.open(article.url, '_blank');
+                });
+                
+                newsGrid.appendChild(card);
+            });
+        }
+        // Display error message
+        function displayError() {
+            newsGrid.style.display = 'none';
+            noNews.style.display = 'block';
+            noNews.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Error Loading News</h3>
+                <p>We encountered an issue while loading the latest news. Please try again later.</p>
+            `;
+            articleCount.textContent = '0';
+        }
+        // Remove duplicate articles
+        function removeDuplicates(arr, key) {
+            const seen = new Set();
+            return arr.filter(item => {
+                const value = item[key];
+                if (seen.has(value)) {
+                    return false;
+                }
+                seen.add(value);
+                return true;
+            });
+        }
+    </script>
+</body>
+</html>
